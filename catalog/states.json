@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/quad-tree/docuget-gis-data/catalog/states.json",
+  "source": {
+    "publisher": "INEGI — Instituto Nacional de Estadística y Geografía",
+    "product": "Directorio Estadístico Nacional de Unidades Económicas (DENUE)",
+    "license": "INEGI — Términos de Libre Uso de la Información",
+    "license_url": "https://www.inegi.org.mx/inegi/terminos.html",
+    "citation": "INEGI. Directorio Estadístico Nacional de Unidades Económicas (DENUE).",
+    "url_pattern_shp": "https://www.inegi.org.mx/contenidos/masiva/denue/denue_{code}_shp.zip",
+    "url_pattern_csv": "https://www.inegi.org.mx/contenidos/masiva/denue/denue_{code}_csv.zip",
+    "portal_url": "https://www.inegi.org.mx/app/descarga/?ti=6",
+    "encoding": "ISO-8859-1",
+    "srid": 4326,
+    "vintage": "2025",
+    "verified_at": "2026-05-21"
+  },
+  "states": [
+    { "code": "01", "name": "Aguascalientes",                  "slug": "ags" },
+    { "code": "02", "name": "Baja California",                 "slug": "bc"  },
+    { "code": "03", "name": "Baja California Sur",             "slug": "bcs" },
+    { "code": "04", "name": "Campeche",                        "slug": "cam" },
+    { "code": "05", "name": "Coahuila de Zaragoza",            "slug": "coa" },
+    { "code": "06", "name": "Colima",                          "slug": "col" },
+    { "code": "07", "name": "Chiapas",                         "slug": "chp" },
+    { "code": "08", "name": "Chihuahua",                       "slug": "chh" },
+    { "code": "09", "name": "Ciudad de México",                "slug": "cmx" },
+    { "code": "10", "name": "Durango",                         "slug": "dur" },
+    { "code": "11", "name": "Guanajuato",                      "slug": "gua" },
+    { "code": "12", "name": "Guerrero",                        "slug": "gro" },
+    { "code": "13", "name": "Hidalgo",                         "slug": "hid" },
+    { "code": "14", "name": "Jalisco",                         "slug": "jal" },
+    { "code": "15", "name": "México",                          "slug": "mex",
+      "url_parts_shp": [
+        "https://www.inegi.org.mx/contenidos/masiva/denue/denue_15_1_shp.zip",
+        "https://www.inegi.org.mx/contenidos/masiva/denue/denue_15_2_shp.zip"
+      ]
+    },
+    { "code": "16", "name": "Michoacán de Ocampo",             "slug": "mic" },
+    { "code": "17", "name": "Morelos",                         "slug": "mor" },
+    { "code": "18", "name": "Nayarit",                         "slug": "nay" },
+    { "code": "19", "name": "Nuevo León",                      "slug": "nle" },
+    { "code": "20", "name": "Oaxaca",                          "slug": "oax" },
+    { "code": "21", "name": "Puebla",                          "slug": "pue" },
+    { "code": "22", "name": "Querétaro",                       "slug": "qro" },
+    { "code": "23", "name": "Quintana Roo",                    "slug": "qroo"},
+    { "code": "24", "name": "San Luis Potosí",                 "slug": "slp" },
+    { "code": "25", "name": "Sinaloa",                         "slug": "sin" },
+    { "code": "26", "name": "Sonora",                          "slug": "son" },
+    { "code": "27", "name": "Tabasco",                         "slug": "tab" },
+    { "code": "28", "name": "Tamaulipas",                      "slug": "tam" },
+    { "code": "29", "name": "Tlaxcala",                        "slug": "tla" },
+    { "code": "30", "name": "Veracruz de Ignacio de la Llave", "slug": "ver" },
+    { "code": "31", "name": "Yucatán",                         "slug": "yuc" },
+    { "code": "32", "name": "Zacatecas",                       "slug": "zac" }
+  ]
+}

@@ -1,0 +1,23 @@
+# Downloaded INEGI source archives — not redistributed in the repo (too large,
+# and the canonical source is INEGI's URL itself). Re-fetch with download_*.sh.
+downloads/
+
+# Generated SQL dumps — too large for git; published as GitHub release assets.
+dist/
+
+# Pipeline logs.
+logs/
+
+# Local env (passwords, etc.)
+.env
+.env.local
+*.env
+!.env.example
+!.env.schema
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/

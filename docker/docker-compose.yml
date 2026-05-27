@@ -1,0 +1,43 @@
+# Standalone PostGIS 18 + 3.6 loader for docuget-gis-data.
+#
+# If you already have a PostGIS instance (e.g. the Docuget devops one on host
+# port 5434), you don't need this — point the scripts at your existing
+# container via GIS_DB_CONTAINER / GIS_DB_NETWORK in the repo root .env.
+#
+# Bring it up:
+#     cp .env.example .env   # edit GIS_DB_PASSWORD
+#     docker compose up -d
+#     docker compose exec docuget-gis-data-db pg_isready
+#
+# Initial state: an empty database `denue_gis` with the `gis` schema and the
+# three base tables created via initdb/.
+
+services:
+  docuget-gis-data-db:
+    image: ${POSTGIS_IMAGE:-postgis/postgis:18-3.6-alpine}
+    container_name: docuget-gis-data-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${GIS_DB_NAME:-denue_gis}
+      POSTGRES_USER: ${GIS_DB_USER:-docuget}
+      POSTGRES_PASSWORD: ${GIS_DB_PASSWORD:?GIS_DB_PASSWORD required}
+      # PG 18 image uses a major-version-subdir layout (/var/lib/postgresql/18/docker).
+      # Mount the *parent* /var/lib/postgresql so initdb can manage the subdir.
+      PGDATA: /var/lib/postgresql/18/docker
+    ports:
+      - "${GIS_DB_HOST_PORT:-5439}:5432"
+    volumes:
+      - gis_data_pgdata:/var/lib/postgresql
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${GIS_DB_USER:-docuget} -d ${GIS_DB_NAME:-denue_gis}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  gis_data_pgdata:
+
+networks:
+  default:
+    name: gis_default
