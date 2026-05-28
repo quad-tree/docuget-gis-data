@@ -44,6 +44,7 @@ This repository gives you two things:
 | `scripts/download_all.sh` / `import_all.sh` / `export_all.sh` | Wrappers around the per-state scripts for batch runs. |
 | `scripts/download.sh` | Download pre-built snapshots from CDN into `dist/` (no restore). |
 | `scripts/quickstart.sh` | Download + restore snapshots into a local PostGIS in one step. |
+| `scripts/03_search_indexes.sql` | GIN trigram indexes for business name + city/municipality search (apply after data load). |
 | `docker/docker-compose.yml` | Optional PostGIS 18 + 3.6 container if you don't already have one. |
 | `docs/yearly-refresh.md` | Step-by-step procedure for refreshing the snapshots when INEGI publishes a new vintage. |
 | `CITATION.md` | INEGI's required citation string + license link. **Read before redistributing.** |
