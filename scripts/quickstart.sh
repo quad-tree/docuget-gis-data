@@ -6,6 +6,7 @@
 #   ./quickstart.sh 24            # one state
 #   ./quickstart.sh all           # every state (sequentially, ~5 min)
 #   ./quickstart.sh mx            # the rolled-up national snapshot
+#   ./quickstart.sh search        # add the NL-search layer (run AFTER 'mx')
 #
 # Env vars:
 #   PGURL                          # full libpq URL (overrides the rest)
@@ -46,6 +47,19 @@ restore_one() {
   rm -f "/tmp/$name"
 }
 
+# Apply the NL-search layer on top of already-restored data. The dumps only
+# carry gis_feature/gis_layer/gis_dataset; this adds search_normalize + the
+# gazetteers + synonyms (02), the trigram/btree indexes (03), and the
+# municipality dictionary (05). Run AFTER restoring the national rollup (mx) —
+# 03 + 05 read gis_feature.
+apply_search() {
+  for f in 02_search_setup.sql 03_search_indexes.sql 05_gaz_municipio.sql; do
+    step "Apply $f"
+    "${PSQL[@]}" -f "$SCRIPT_DIR/$f"
+    ok "$f applied"
+  done
+}
+
 case "$WHAT" in
   all)
     mapfile -t CODES < <(state_codes_all)
@@ -54,11 +68,16 @@ case "$WHAT" in
   mx|MX)
     restore_one "denue_mx.sql.gz"
     ;;
+  search)
+    apply_search
+    printf '\n\033[1;32m✓ Search layer ready.\033[0m\n'
+    exit 0
+    ;;
   [0-9][0-9])
     restore_one "denue_${WHAT}.sql.gz"
     ;;
   *)
-    fail "unknown target '$WHAT' (expected state code 01..32, 'all', or 'mx')"
+    fail "unknown target '$WHAT' (expected state code 01..32, 'all', 'mx', or 'search')"
     ;;
 esac
 

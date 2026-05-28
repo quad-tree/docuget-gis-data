@@ -1,3 +1,8 @@
+-- ARCHIVED PATCH — these corrections are now folded into the base seed in
+-- 02_search_setup.sql, so a fresh install is already correct and does NOT
+-- need this. Kept only for DBs that were seeded BEFORE 2026-05-27 (apply once
+-- to bring an old activity_synonym table up to date).
+--
 -- Audit fixes 2026-05-27: SCIAN 2018 codes verified against actual DENUE data
 
 -- carnicerías: 4621 = minisupers (wrong). No clean standalone butcher code in SCIAN.

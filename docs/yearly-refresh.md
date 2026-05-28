@@ -69,6 +69,22 @@ docker exec docuget-gis-db psql -U docuget -d docuget_gis -c "
 ./scripts/quickstart.sh 24   # or any state
 ```
 
+### 3.5. Rebuild the search layer
+
+The synonym/gazetteer tables (`02_search_setup.sql`) are static and only need
+re-applying if you changed them. But the **municipality dictionary**
+(`05_gaz_municipio.sql`) and the **search indexes** (`03_search_indexes.sql`)
+are derived from `gis_feature` — a new vintage adds/moves municipios, so they
+go stale. Rebuild them on every reloaded database (local and Neon):
+
+```bash
+PGURL="$GIS_DATABASE_URL" ./scripts/quickstart.sh search
+# re-applies 02 → 03 → 05; 05 (gaz_municipio) is the one that MUST be rebuilt
+```
+
+Skipping the `05` rebuild leaves city-name search resolving against the old
+municipality centroids/counts (and missing any new municipios).
+
 ### 4. Tag the release
 
 ```bash

@@ -43,8 +43,11 @@ This repository gives you two things:
 | `scripts/batch_local.sh` | End-to-end loop: download + import + dump, with state-by-state checkpointing. |
 | `scripts/download_all.sh` / `import_all.sh` / `export_all.sh` | Wrappers around the per-state scripts for batch runs. |
 | `scripts/download.sh` | Download pre-built snapshots from CDN into `dist/` (no restore). |
-| `scripts/quickstart.sh` | Download + restore snapshots into a local PostGIS in one step. |
-| `scripts/03_search_indexes.sql` | GIN trigram indexes for business name + city/municipality search (apply after data load). |
+| `scripts/quickstart.sh` | Download + restore snapshots into a local PostGIS in one step (`search` target adds the NL-search layer). |
+| `scripts/02_search_setup.sql` | NL-search layer: `search_normalize` + gazetteers (`gaz_state`/`gaz_region`) + audited `activity_synonym` seed. Apply after data load. |
+| `scripts/03_search_indexes.sql` | GIN trigram indexes for business name + city/municipality search. Apply after `02`. |
+| `scripts/05_gaz_municipio.sql` | Municipality dictionary (~2,476 rows) for sub-ms city resolution. Apply after `03`. Rebuild on data reload. |
+| `scripts/patches/` | One-off corrections already folded into the base (e.g. the 2026-05-27 SCIAN synonym audit). Only for DBs seeded before the fix. |
 | `docker/docker-compose.yml` | Optional PostGIS 18 + 3.6 container if you don't already have one. |
 | `docs/yearly-refresh.md` | Step-by-step procedure for refreshing the snapshots when INEGI publishes a new vintage. |
 | `CITATION.md` | INEGI's required citation string + license link. **Read before redistributing.** |
@@ -87,6 +90,22 @@ Or use the all-in-one helper (downloads + restores in one step):
 ./scripts/quickstart.sh all           # download + restore all 32 states
 ./scripts/quickstart.sh mx            # download + restore the national rollup
 ```
+
+### Natural-language search (optional)
+
+The `.sql.gz` snapshots carry only the feature tables. To enable the
+NL-search layer (`search_normalize`, gazetteers, audited SCIAN synonyms,
+trigram indexes, and the municipality dictionary), restore the national
+rollup first, then apply the search scripts:
+
+```bash
+./scripts/quickstart.sh mx            # 1. restore the national rollup
+./scripts/quickstart.sh search        # 2. apply 02 → 03 → 05 in order
+```
+
+Apply order matters: `03` (indexes) and `05` (`gaz_municipio`) read
+`gis_feature`, so they must run after the data is loaded. `05` is derived
+from the data — **rebuild it whenever you reload a new vintage.**
 
 ## Build from source (refresh the snapshots)
 
