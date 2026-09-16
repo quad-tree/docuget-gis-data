@@ -30,7 +30,10 @@ services:
       - gis_data_pgdata:/var/lib/postgresql
       - ./initdb:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${GIS_DB_USER:-docuget} -d ${GIS_DB_NAME:-denue_gis}"]
+      test: [
+        "CMD-SHELL",
+        "pg_isready -U ${GIS_DB_USER:-docuget} -d ${GIS_DB_NAME:-denue_gis}",
+      ]
       interval: 5s
       timeout: 5s
       retries: 10

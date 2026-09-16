@@ -5,15 +5,15 @@
 
 The **Directorio Estadístico Nacional de Unidades Económicas (DENUE)** is
 INEGI's open catalog of every economic unit in Mexico — roughly **5 million
-points**, refreshed twice a year, covering all 32 entities (states). Each
-point carries 50+ attributes: name, activity code (SCIAN), address, employee
-band, contact, coordinates.
+points**, refreshed twice a year, covering all 32 entities (states). Each point
+carries 50+ attributes: name, activity code (SCIAN), address, employee band,
+contact, coordinates.
 
 This repository gives you two things:
 
 1. **Pre-built `.sql.gz` snapshots** hosted on CDN — one per state, plus a
-   national rollup. Each snapshot includes the schema bootstrap, so any
-   empty PostGIS database becomes a working DENUE database in seconds:
+   national rollup. Each snapshot includes the schema bootstrap, so any empty
+   PostGIS database becomes a working DENUE database in seconds:
 
    ```bash
    # Download a single state (or use: all | mx | full)
@@ -32,26 +32,26 @@ This repository gives you two things:
 
 ## What's inside
 
-| Path | Purpose |
-|------|---------|
-| `catalog/states.json` | The 32 INEGI entities (code, name, slug), source URL pattern, license metadata. **Single source of truth.** |
-| `scripts/lib.sh` | Shared helpers — catalog lookup, env defaults, logging primitives. |
-| `scripts/download_state.sh` | Pull one state's SHP zip from INEGI (ETag-aware, idempotent). |
-| `scripts/import_state.sh` | Load one state's SHP into a local PostGIS container via `ogr2ogr`. Idempotent re-load. |
-| `scripts/export_state_dump.sh` | Serialize one state's layer to a portable `denue_XX.sql.gz`. |
-| `scripts/sync_state_to_neon.sh` | (Docuget-internal) promote a state's layer from local Docker → Neon. |
-| `scripts/batch_local.sh` | End-to-end loop: download + import + dump, with state-by-state checkpointing. |
-| `scripts/download_all.sh` / `import_all.sh` / `export_all.sh` | Wrappers around the per-state scripts for batch runs. |
-| `scripts/download.sh` | Download pre-built snapshots from CDN into `dist/` (no restore). |
-| `scripts/quickstart.sh` | Download + restore snapshots into a local PostGIS in one step (`search` target adds the NL-search layer). |
-| `scripts/02_search_setup.sql` | NL-search layer: `search_normalize` + gazetteers (`gaz_state`/`gaz_region`) + audited `activity_synonym` seed. Apply after data load. |
-| `scripts/03_search_indexes.sql` | GIN trigram indexes for business name + city/municipality search. Apply after `02`. |
-| `scripts/05_gaz_municipio.sql` | Municipality dictionary (~2,476 rows) for sub-ms city resolution. Apply after `03`. Rebuild on data reload. |
-| `scripts/patches/` | One-off corrections already folded into the base (e.g. the 2026-05-27 SCIAN synonym audit). Only for DBs seeded before the fix. |
-| `docker/docker-compose.yml` | Optional PostGIS 18 + 3.6 container if you don't already have one. |
-| `docs/yearly-refresh.md` | Step-by-step procedure for refreshing the snapshots when INEGI publishes a new vintage. |
-| `CITATION.md` | INEGI's required citation string + license link. **Read before redistributing.** |
-| `LICENSE` | Apache 2.0 for the **scripts and catalog**. DENUE data itself is governed by INEGI's *Términos de Libre Uso*. |
+| Path                                                          | Purpose                                                                                                                               |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `catalog/states.json`                                         | The 32 INEGI entities (code, name, slug), source URL pattern, license metadata. **Single source of truth.**                           |
+| `scripts/lib.sh`                                              | Shared helpers — catalog lookup, env defaults, logging primitives.                                                                    |
+| `scripts/download_state.sh`                                   | Pull one state's SHP zip from INEGI (ETag-aware, idempotent).                                                                         |
+| `scripts/import_state.sh`                                     | Load one state's SHP into a local PostGIS container via `ogr2ogr`. Idempotent re-load.                                                |
+| `scripts/export_state_dump.sh`                                | Serialize one state's layer to a portable `denue_XX.sql.gz`.                                                                          |
+| `scripts/sync_state_to_neon.sh`                               | (Docuget-internal) promote a state's layer from local Docker → Neon.                                                                  |
+| `scripts/batch_local.sh`                                      | End-to-end loop: download + import + dump, with state-by-state checkpointing.                                                         |
+| `scripts/download_all.sh` / `import_all.sh` / `export_all.sh` | Wrappers around the per-state scripts for batch runs.                                                                                 |
+| `scripts/download.sh`                                         | Download pre-built snapshots from CDN into `dist/` (no restore).                                                                      |
+| `scripts/quickstart.sh`                                       | Download + restore snapshots into a local PostGIS in one step (`search` target adds the NL-search layer).                             |
+| `scripts/02_search_setup.sql`                                 | NL-search layer: `search_normalize` + gazetteers (`gaz_state`/`gaz_region`) + audited `activity_synonym` seed. Apply after data load. |
+| `scripts/03_search_indexes.sql`                               | GIN trigram indexes for business name + city/municipality search. Apply after `02`.                                                   |
+| `scripts/05_gaz_municipio.sql`                                | Municipality dictionary (~2,476 rows) for sub-ms city resolution. Apply after `03`. Rebuild on data reload.                           |
+| `scripts/patches/`                                            | One-off corrections already folded into the base (e.g. the 2026-05-27 SCIAN synonym audit). Only for DBs seeded before the fix.       |
+| `docker/docker-compose.yml`                                   | Optional PostGIS 18 + 3.6 container if you don't already have one.                                                                    |
+| `docs/yearly-refresh.md`                                      | Step-by-step procedure for refreshing the snapshots when INEGI publishes a new vintage.                                               |
+| `CITATION.md`                                                 | INEGI's required citation string + license link. **Read before redistributing.**                                                      |
+| `LICENSE`                                                     | Apache 2.0 for the **scripts and catalog**. DENUE data itself is governed by INEGI's _Términos de Libre Uso_.                         |
 
 ## Quickstart (consume pre-built snapshots)
 
@@ -93,10 +93,10 @@ Or use the all-in-one helper (downloads + restores in one step):
 
 ### Natural-language search (optional)
 
-The `.sql.gz` snapshots carry only the feature tables. To enable the
-NL-search layer (`search_normalize`, gazetteers, audited SCIAN synonyms,
-trigram indexes, and the municipality dictionary), restore the national
-rollup first, then apply the search scripts:
+The `.sql.gz` snapshots carry only the feature tables. To enable the NL-search
+layer (`search_normalize`, gazetteers, audited SCIAN synonyms, trigram indexes,
+and the municipality dictionary), restore the national rollup first, then apply
+the search scripts:
 
 ```bash
 ./scripts/quickstart.sh mx            # 1. restore the national rollup
@@ -104,8 +104,8 @@ rollup first, then apply the search scripts:
 ```
 
 Apply order matters: `03` (indexes) and `05` (`gaz_municipio`) read
-`gis_feature`, so they must run after the data is loaded. `05` is derived
-from the data — **rebuild it whenever you reload a new vintage.**
+`gis_feature`, so they must run after the data is loaded. `05` is derived from
+the data — **rebuild it whenever you reload a new vintage.**
 
 ## Build from source (refresh the snapshots)
 
@@ -125,7 +125,8 @@ export GIS_DB_PASSWORD=devpass
 ./scripts/quickstart.sh 24
 ```
 
-Full procedure for yearly INEGI vintage refresh: see [`docs/yearly-refresh.md`](docs/yearly-refresh.md).
+Full procedure for yearly INEGI vintage refresh: see
+[`docs/yearly-refresh.md`](docs/yearly-refresh.md).
 
 ## Schema
 
@@ -161,8 +162,8 @@ erDiagram
   }
 ```
 
-A GIST index on `gis_feature.geom` makes `ST_Intersects`, `ST_DWithin`, and
-bbox queries fast. The layer's full extent is denormalized in
+A GIST index on `gis_feature.geom` makes `ST_Intersects`, `ST_DWithin`, and bbox
+queries fast. The layer's full extent is denormalized in
 `gis_layer.feature_count`.
 
 ## Pipeline at a glance
@@ -187,30 +188,29 @@ flowchart LR
 
 `pg_dump --data-only` output is brittle across PG major versions, assumes a
 specific role/owner exists on the destination, and leaks
-`set_config('search_path','',false)` into the pooled session (which can
-break unrelated transactions on shared backends — we hit this in the
-Docuget GIS migration). The hand-rolled form here:
+`set_config('search_path','',false)` into the pooled session (which can break
+unrelated transactions on shared backends — we hit this in the Docuget GIS
+migration). The hand-rolled form here:
 
-- Creates the `gis` schema + tables with `CREATE … IF NOT EXISTS`, so the
-  same snapshot applies to an empty DB and to one that already holds other
-  states.
-- Stages features through a `TEMP TABLE` so the COPY column types are
-  decoupled from the destination's geometry types — works whether the
-  destination has the same PostGIS minor version or not.
-- Drops a single fixed `layer_id` before reloading, so re-applying a
-  snapshot is idempotent (perfect for yearly refresh).
-- Runs `VACUUM ANALYZE` after `COMMIT` — without this, the planner won't
-  pick the GIST index on a fresh load, and `ST_*` queries do Seq Scan.
+- Creates the `gis` schema + tables with `CREATE … IF NOT EXISTS`, so the same
+  snapshot applies to an empty DB and to one that already holds other states.
+- Stages features through a `TEMP TABLE` so the COPY column types are decoupled
+  from the destination's geometry types — works whether the destination has the
+  same PostGIS minor version or not.
+- Drops a single fixed `layer_id` before reloading, so re-applying a snapshot is
+  idempotent (perfect for yearly refresh).
+- Runs `VACUUM ANALYZE` after `COMMIT` — without this, the planner won't pick
+  the GIST index on a fresh load, and `ST_*` queries do Seq Scan.
 
 ## Licensing
 
 The **scripts and catalog** in this repo are **Apache 2.0** (see `LICENSE`).
 
 The **DENUE data itself** is published by INEGI under the
-*[Términos de Libre Uso de la Información](https://www.inegi.org.mx/inegi/terminos.html)*.
-Redistribution is permitted with **attribution** — see [`CITATION.md`](CITATION.md)
-for the required citation string. Every snapshot embeds the license + citation
-in `gis.gis_dataset.metadata`.
+_[Términos de Libre Uso de la Información](https://www.inegi.org.mx/inegi/terminos.html)_.
+Redistribution is permitted with **attribution** — see
+[`CITATION.md`](CITATION.md) for the required citation string. Every snapshot
+embeds the license + citation in `gis.gis_dataset.metadata`.
 
 ## Refresh cadence
 
@@ -220,14 +220,15 @@ November). To refresh:
 1. Bump `source.vintage` in `catalog/states.json`.
 2. `./scripts/batch_local.sh` — re-runs the pipeline end-to-end.
 3. `git tag v2025.11 && git push --tags` — creates a new GitHub release.
-4. GitHub Actions (TODO: not yet wired) uploads the new `denue_*.sql.gz` to
-   the release assets.
+4. GitHub Actions (TODO: not yet wired) uploads the new `denue_*.sql.gz` to the
+   release assets.
 
 See [`docs/yearly-refresh.md`](docs/yearly-refresh.md) for the full procedure.
 
 ## Companion projects
 
-- **api-gis** (Docuget) — Hono + PostGIS REST API consuming the same `gis` schema.
+- **api-gis** (Docuget) — Hono + PostGIS REST API consuming the same `gis`
+  schema.
 - **front-deno `/gis`** (Docuget) — OpenLayers viewer with bbox queries.
-- Both are private to Docuget today; we'll open-source them after the
-  schema stabilizes.
+- Both are private to Docuget today; we'll open-source them after the schema
+  stabilizes.
