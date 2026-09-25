@@ -1,5 +1,5 @@
 -- Migration 06: gis.api_usage — per-key monthly request counters for api-gis
--- Applied: (pending go-ahead) on Neon GIS
+-- Applied: 2026-09-25 on Neon GIS (owner go-ahead in session)
 -- Context: api-gis was open to anyone (P1: "every route is open against the
 --   public DENUE corpus"). To offer it outside docuget, requests carry an API
 --   key — the platform's existing `apikey` table, role `gis`, limits in
