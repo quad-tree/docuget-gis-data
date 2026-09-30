@@ -27,8 +27,8 @@ flowchart TD
   A[1. Bump vintage in catalog/states.json] --> B[2. batch_local.sh]
   B --> C[3. Spot-check a few states]
   C --> D[4. git tag vYEAR.MONTH]
-  D --> E[5. Push + create GitHub release]
-  E --> F[6. CI uploads dist/*.sql.gz to release assets]
+  D --> E[5. Publish dist/*.sql.gz + manifest to the R2 mirror]
+  E --> F[6. Bump DATA_VERSION in download.sh / quickstart.sh]
   F --> G[7. Update Docuget api-gis if needed]
 ```
 
@@ -96,18 +96,29 @@ git tag v2025.11
 git push origin v2025.11
 ```
 
-### 5. CI uploads release assets
+### 5. Publish to the R2 mirror (maintainers)
 
-A GitHub Action (TODO: not yet wired) triggers on tag push and uploads every
-`dist/denue_*.sql.gz` to the release matching the tag. Until that ships, upload
-manually with `gh release upload`:
+The public snapshots live in Cloudflare R2, published by API México as its
+`denue` addon — every file listed with size and SHA-256 in a manifest:
+`https://pub-d2aada512aad4b6bb9c56cafb776e230.r2.dev/addons/denue/<vintage>/manifiesto.json` (and the current one at `https://pub-d2aada512aad4b6bb9c56cafb776e230.r2.dev/addons/denue/manifiesto.json`).
+From an API México checkout, with Quad Tree credentials:
 
 ```bash
-gh release create v2025.11 \
-  --title "DENUE 2025 (November vintage)" \
-  --notes "INEGI DENUE refresh — November 2025 vintage. See CITATION.md." \
-  dist/denue_*.sql.gz
+deno task addon:construir:denue --desde ../docuget-gis-data/dist --version 2025.11
+cd ../docuget-devops && varlock run -- deno run -A scripts/api_mexico_publicar.ts --solo-addons
 ```
+
+Then bump the default in both scripts and check one download against the
+manifest:
+
+```bash
+sed -i 's/DATA_VERSION:-v2025.06/DATA_VERSION:-v2025.11/' scripts/download.sh scripts/quickstart.sh
+./scripts/download.sh 01 && sha256sum dist/denue_01.sql.gz   # must match the manifest
+```
+
+> Until 2026-09 the snapshots were served from a DigitalOcean Spaces CDN
+> (`mex1co`), since retired. GitHub release assets were planned but never
+> published.
 
 ### 6. Update Docuget api-gis (if relevant)
 

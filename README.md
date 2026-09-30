@@ -11,8 +11,9 @@ contact, coordinates.
 
 This repository gives you two things:
 
-1. **Pre-built `.sql.gz` snapshots** hosted on CDN — one per state, plus a
-   national rollup. Each snapshot includes the schema bootstrap, so any empty
+1. **Pre-built `.sql.gz` snapshots** mirrored in Cloudflare R2 — one per state,
+   plus a national rollup — with a manifest giving each file's size and SHA-256
+   (`https://pub-d2aada512aad4b6bb9c56cafb776e230.r2.dev/addons/denue/manifiesto.json`). Each snapshot includes the schema bootstrap, so any empty
    PostGIS database becomes a working DENUE database in seconds:
 
    ```bash
@@ -42,7 +43,7 @@ This repository gives you two things:
 | `scripts/sync_state_to_neon.sh`                               | (Docuget-internal) promote a state's layer from local Docker → Neon.                                                                  |
 | `scripts/batch_local.sh`                                      | End-to-end loop: download + import + dump, with state-by-state checkpointing.                                                         |
 | `scripts/download_all.sh` / `import_all.sh` / `export_all.sh` | Wrappers around the per-state scripts for batch runs.                                                                                 |
-| `scripts/download.sh`                                         | Download pre-built snapshots from CDN into `dist/` (no restore).                                                                      |
+| `scripts/download.sh`                                         | Download pre-built snapshots from the R2 mirror into `dist/` (no restore).                                                                      |
 | `scripts/quickstart.sh`                                       | Download + restore snapshots into a local PostGIS in one step (`search` target adds the NL-search layer).                             |
 | `scripts/02_search_setup.sql`                                 | NL-search layer: `search_normalize` + gazetteers (`gaz_state`/`gaz_region`) + audited `activity_synonym` seed. Apply after data load. |
 | `scripts/03_search_indexes.sql`                               | GIN trigram indexes for business name + city/municipality search. Apply after `02`.                                                   |
@@ -62,7 +63,7 @@ You need: any PostgreSQL 12+ with PostGIS 3.x.
 git clone https://github.com/quad-tree/docuget-gis-data.git
 cd docuget-gis-data
 
-# 2. Download the snapshot you want from CDN.
+# 2. Download the snapshot you want from the R2 mirror.
 ./scripts/download.sh 24              # one state (~5 MB)
 ./scripts/download.sh mx              # national rollup (~750 MB)
 ./scripts/download.sh full            # all 32 states + rollup (~1.5 GB)
@@ -219,9 +220,14 @@ November). To refresh:
 
 1. Bump `source.vintage` in `catalog/states.json`.
 2. `./scripts/batch_local.sh` — re-runs the pipeline end-to-end.
-3. `git tag v2025.11 && git push --tags` — creates a new GitHub release.
-4. GitHub Actions (TODO: not yet wired) uploads the new `denue_*.sql.gz` to the
-   release assets.
+3. Publish the new `dist/denue_*.sql.gz` to the R2 mirror under
+   `addons/denue/<vintage>/` with a fresh manifest (maintainers; see the
+   refresh doc), then bump the `DATA_VERSION` default in `scripts/download.sh`
+   and `scripts/quickstart.sh`.
+4. `git tag v2025.11 && git push --tags` to mark the vintage in history.
+
+> Until 2026-09 the snapshots lived on a DigitalOcean Spaces CDN that has since
+> been retired; GitHub release assets were planned but never published.
 
 See [`docs/yearly-refresh.md`](docs/yearly-refresh.md) for the full procedure.
 
