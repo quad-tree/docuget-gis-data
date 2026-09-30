@@ -21,7 +21,9 @@ source "$SCRIPT_DIR/lib.sh"
 
 WHAT="${1:?usage: $0 <state-code 01..32 | all | mx | full>}"
 DATA_VERSION="${DATA_VERSION:-v2025.06}"
-DATA_BASE_URL="${DATA_BASE_URL:-https://mex1co.sfo3.digitaloceanspaces.com/gis-data/${DATA_VERSION}}"
+# The DigitalOcean CDN (mex1co) was retired in 2026-09 (NoSuchBucket); the
+# snapshots are now mirrored in Cloudflare R2 by API México (addon «denue»).
+DATA_BASE_URL="${DATA_BASE_URL:-https://pub-d2aada512aad4b6bb9c56cafb776e230.r2.dev/addons/denue/${DATA_VERSION#v}}"
 DIST_DIR="$REPO_DIR/dist"
 mkdir -p "$DIST_DIR"
 
