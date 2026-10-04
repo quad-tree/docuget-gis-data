@@ -203,8 +203,15 @@ INSERT INTO gis.activity_synonym (id, phrase, phrase_norm, codigo_prefixes, sour
   ('syn_ensambladoras',        'ensambladoras',          gis.search_normalize('ensambladoras'),        ARRAY['336'],                              'manual', NULL),
   ('syn_imprentas',            'imprentas',              gis.search_normalize('imprentas'),            ARRAY['323'],                              'manual', NULL),
   ('syn_constructoras',        'constructoras',          gis.search_normalize('constructoras'),        ARRAY['23'],                               'manual', NULL),
-  ('syn_gasolineras',          'gasolineras',            gis.search_normalize('gasolineras'),          ARRAY['4684'],                             'manual', 'Comercio de combustibles'),
-  ('syn_gasolineria',          'gasolinería',            gis.search_normalize('gasolinería'),          ARRAY['4684'],                             'manual', 'Singular spelling variant'),
+  ('syn_gasolineras',          'gasolineras',            gis.search_normalize('gasolineras'),          ARRAY['468411'],                             'manual', 'Gasolina y diésel (4684 = todos los combustibles: carbón, lubricantes)'),
+  ('syn_gasolineria',          'gasolinería',            gis.search_normalize('gasolinería'),          ARRAY['468411'],                             'manual', 'Singular spelling variant'),
+  ('syn_nocturno_clubes', 'clubes nocturnos', gis.search_normalize('clubes nocturnos'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
+  ('syn_nocturno_club', 'club nocturno', gis.search_normalize('club nocturno'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
+  ('syn_nocturno_centros', 'centros nocturnos', gis.search_normalize('centros nocturnos'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
+  ('syn_nocturno_antros', 'antros', gis.search_normalize('antros'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
+  ('syn_nocturno_antro', 'antro', gis.search_normalize('antro'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
+  ('syn_nocturno_discotecas', 'discotecas', gis.search_normalize('discotecas'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
+  ('syn_nocturno_discoteca', 'discoteca', gis.search_normalize('discoteca'), ARRAY['722411'], 'manual', 'Centros nocturnos, discotecas y similares'),
   ('syn_agencias_de_autos',    'agencias de autos',      gis.search_normalize('agencias de autos'),    ARRAY['4681','4682'],                      'manual', NULL)
 ON CONFLICT (phrase_norm) DO UPDATE SET
   phrase = EXCLUDED.phrase, codigo_prefixes = EXCLUDED.codigo_prefixes,
